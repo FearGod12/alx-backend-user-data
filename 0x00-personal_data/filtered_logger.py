@@ -3,7 +3,7 @@
 """
 
 import re
-from typing import List, Iterable
+from typing import List
 import logging
 import os
 
@@ -46,7 +46,8 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     passwd = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
     db = os.getenv("PERSONAL_DATA_DB_NAME")
 
-    database = MySQLConnection(host=host, user=user, password=passwd, database=db)
+    database = MySQLConnection(host=host, user=user, password=passwd,
+                               database=db)
     return database
 
 
