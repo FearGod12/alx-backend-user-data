@@ -48,6 +48,22 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return conn
 
 
+def main():
+    """main function. and the only one to run when executed"""
+    conn = get_db()
+    cursor = conn.cursor()
+    query = "SELECT * FROM users"
+    result = cursor.execute(query)
+
+    fields = ["name", "email", "phone", "ssn", "password"]
+    for each in result:
+        filtered = filter_datum(fields, "***", each, ";")
+        print(filtered)
+
+    cursor.close()
+    conn.close()
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
@@ -65,3 +81,7 @@ class RedactingFormatter(logging.Formatter):
         """formats the record overriding the default formatter"""
         return filter_datum(self.fields, self.REDACTION,
                             super().format(record), self.SEPARATOR)
+
+
+if __name__ == "__main__":
+    main()
