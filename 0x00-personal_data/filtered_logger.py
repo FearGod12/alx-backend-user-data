@@ -57,7 +57,7 @@ def main():
 
     fields = ["name", "email", "phone", "ssn", "password"]
     for each in cursor:
-        record = " ".join(each)
+        record = " ".join(list(each))
         filtered = filter_datum(fields, "***", record, ";")
         print(filtered)
 
