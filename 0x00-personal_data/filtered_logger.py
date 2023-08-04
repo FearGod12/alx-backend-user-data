@@ -60,8 +60,8 @@ def main():
         message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " + \
                   f"ssn={row[3]}; password={row[4]};ip={row[5]}; " + \
                   f"last_login={row[6]}; user_agent={row[7]};"
-        filter_datum(fields, "***", message, ";")
-        print(message)
+        newmessage = filter_datum(fields, "***", message, ";")
+        print(newmessage)
 
     cursor.close()
     conn.close()
