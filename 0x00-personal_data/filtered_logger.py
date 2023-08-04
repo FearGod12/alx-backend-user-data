@@ -56,10 +56,11 @@ def main():
     cursor.execute(query)
 
     fields = ["name", "email", "phone", "ssn", "password"]
-    for each in cursor:
-        record = " ".join(list(each))
-        filtered = filter_datum(fields, "***", record, ";")
-        print(filtered)
+    for row in cursor:
+        message = f"name={row[0]}; email={row[1]}; phone={row[2]}; " + \
+                  f"ssn={row[3]}; password={row[4]};ip={row[5]}; " + \
+                  f"last_login={row[6]}; user_agent={row[7]};"
+        print(message)
 
     cursor.close()
     conn.close()
