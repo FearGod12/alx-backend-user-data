@@ -52,12 +52,12 @@ def main():
     """main function. and the only one to run when executed"""
     conn = get_db()
     cursor = conn.cursor()
-    query = "SELECT * FROM users"
-    result = cursor.execute(query)
+    query = "SELECT * FROM users;"
+    cursor.execute(query)
 
     fields = ["name", "email", "phone", "ssn", "password"]
-    for each in result:
-        filtered = filter_datum(fields, "***", each, ";")
+    for each in cursor:
+        filtered = filter_datum(fields, "***", each.join(" "), ";")
         print(filtered)
 
     cursor.close()
