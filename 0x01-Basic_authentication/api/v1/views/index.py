@@ -37,5 +37,7 @@ def unauthorized():
 
 @app_views.route('/forbidden')
 def forbidden():
-    """403 error called when reached"""
+    """
+    403 error called when reached
+    """
     abort(403)
