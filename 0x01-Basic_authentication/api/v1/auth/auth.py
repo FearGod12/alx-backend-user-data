@@ -13,12 +13,16 @@ class Auth:
         check if path require authentication
         :param path:
         :param excluded_paths:
-        :return: False
+        :return: False/True
         """
         if path is None or excluded_paths is None or len(excluded_paths) == 0:
             return True
         if path in excluded_paths or ((path + "/") in excluded_paths):
             return False
+        for each in excluded_paths:
+            if each.endswith("*"):
+                if path.startswith(each[:-1]):
+                    return False
         return True
 
     def authorization_header(self, request=None) -> str:
