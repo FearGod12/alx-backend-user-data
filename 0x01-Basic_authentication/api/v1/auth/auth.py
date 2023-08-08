@@ -25,7 +25,7 @@ class Auth:
         """
 
         :param request: the flask request object
-        :return: None
+        :return: the authorization header
         """
         if request is None or request.headers.get("Authorization", None)\
                 is None:

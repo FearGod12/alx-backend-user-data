@@ -34,7 +34,7 @@ class BasicAuth(Auth):
             credential = base64.b64decode(base64_authorization_header
                                           ).decode("utf-8")
             return credential
-        except binascii.Error:
+        except (binascii.Error, UnicodeDecodeError, TypeError):
             None
 
     def extract_user_credentials(self,
@@ -62,3 +62,24 @@ class BasicAuth(Auth):
             if user.is_valid_password(user_pwd):
                 return user
         return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """overloads the auth class.
+        returns the current user based on the rquest header"""
+        if request is None:
+            return None
+        header = self.authorization_header(request)
+        if header is None:
+            return None
+        base64_header = self.extract_base64_authorization_header(header)
+        if base64_header is None:
+            return None
+        decoded_header = self.decode_base64_authorization_header(base64_header)
+        if decoded_header is None:
+            return None
+        credentials = self.extract_user_credentials(decoded_header)
+        if None in credentials:
+            return None
+        email, passwd = credentials
+        user = self.user_object_from_credentials(email, passwd)
+        return user
