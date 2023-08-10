@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """the session Authentication module
 """
+import os
 import uuid
 from models.user import User
 from api.v1.auth.auth import Auth
@@ -43,7 +44,14 @@ class SessionAuth(Auth):
         if request is None:
             return None
         session_id = self.session_cookie(request)
-        user_id = self.user_id_by_session_id.get(session_id)
+        if os.getenv("AUTH_TYPE") == "session_exp_auth":
+            sess = self.user_id_by_session_id.get(session_id)
+            if sess is not None:
+                user_id = sess.get("user_id")
+            else:
+                user_id = None
+        else:
+            user_id = self.user_id_by_session_id.get(session_id)
         user = User.get(user_id)
         return user
 

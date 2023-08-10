@@ -119,7 +119,7 @@ class Base():
         """ Return one object by ID
         """
         s_class = cls.__name__
-        return DATA[s_class].get(id)
+        return DATA[s_class].get(id, None)
 
     @classmethod
     def search(cls, attributes: dict = {}) -> List[TypeVar('Base')]:
