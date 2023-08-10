@@ -14,15 +14,15 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 
-if os.getenv("AUTH_TYPE") == "auth":
+if os.getenv("AUTH_TYPE") == "session_auth":
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
+elif os.getenv("AUTH_TYPE") == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
 elif os.getenv("AUTH_TYPE") == "basic_auth":
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
-elif os.getenv("AUTH_TYPE") == "session_auth":
-    from api.v1.auth.session_auth import SessionAuth
-    auth = SessionAuth()
 
 
 @app.errorhandler(404)

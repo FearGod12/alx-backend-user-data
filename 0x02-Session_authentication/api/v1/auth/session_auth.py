@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""the Authentication module"""
-from typing import List, TypeVar
-from flask import request
+"""the session Authentication module
+"""
 from api.v1.auth.auth import Auth
 
 
 class SessionAuth(Auth):
+    """session authentication class
+    to be used to authenticate users
+    """
     pass
