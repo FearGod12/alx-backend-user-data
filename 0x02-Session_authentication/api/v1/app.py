@@ -50,7 +50,8 @@ def forbidden(error) -> str:
 
 @app.before_request
 def before_request():
-    """to be executed before each request"""
+    """to be executed before each request
+    """
     request.current_user = auth.current_user(request)
 
     if auth is not None:
