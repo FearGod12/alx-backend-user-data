@@ -2,13 +2,15 @@
 """DB module
 """
 from typing import TypeVar
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+
 from user import User
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-
 from user import Base
 
 
@@ -44,3 +46,20 @@ class DB:
         self.__session.add(user)
         self.__session.commit()
         return user
+
+    def find_user_by(self, **kwargs):
+        """
+        retrieves a user based on the provided attributes
+        :param kwargs: attributes of the user
+        :return: user
+        """
+        try:
+            for key, val in kwargs.items():
+                user = self.__session.query(User).filter(key==val).first()
+                if user is None:
+                    raise NoResultFound
+                return user
+
+        except InvalidRequestError as e:
+            self.__session.rollback()
+            raise e
