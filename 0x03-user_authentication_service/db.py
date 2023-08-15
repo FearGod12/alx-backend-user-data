@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DB module
 """
-from typing import TypeVar
+from typing import TypeVar, Dict
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -64,8 +64,23 @@ class DB:
                 raise NoResultFound("No user found")
 
             return user
-        except InvalidRequestError as e:
+        except (InvalidRequestError, AttributeError) as e:
             self.__session.rollback()
-            raise e
-        finally:
-            self.__session.close()
+            raise InvalidRequestError("Invalid query")
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        updates the user instance if it has the attribute
+        :return: None
+        """
+        user = self.find_user_by(id=user_id)
+        if user is not None:
+            try:
+                for key, val in kwargs.items():
+                    if hasattr(user, key):
+                        setattr(user, key, val)
+                    else:
+                        raise ValueError
+                self.__session.commit()
+            except AttributeError:
+                raise ValueError
