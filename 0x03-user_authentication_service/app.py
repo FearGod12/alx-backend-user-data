@@ -2,7 +2,7 @@
 """the flask app module
 """
 
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
 AUTH = Auth()
@@ -43,6 +43,21 @@ def login():
         resp.set_cookie("session_id", sesseion_id)
         return resp
     abort(401)
+
+
+@app.route('/logout', methods=["DELETE"], strict_slashes=False)
+def logout():
+    """
+    logs out a user and delete the session id
+    """
+    session_id = request.cookies.get("session_id")
+    if session_id is not None:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user is not None:
+            AUTH.destroy_session(user.id)
+            redirect('/')
+        else:
+            abort(403)
 
 
 if __name__ == "__main__":
