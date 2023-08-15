@@ -45,7 +45,7 @@ def login():
     abort(401)
 
 
-@app.route('/logout', methods=["DELETE"], strict_slashes=False)
+@app.route('/sessions', methods=["DELETE"], strict_slashes=False)
 def logout():
     """
     logs out a user and delete the session id
