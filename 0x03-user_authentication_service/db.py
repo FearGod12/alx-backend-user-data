@@ -21,7 +21,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -54,12 +54,18 @@ class DB:
         :return: user
         """
         try:
-            for key, val in kwargs.items():
-                user = self.__session.query(User).filter(key==val).first()
-                if user is None:
-                    raise NoResultFound
-                return user
+            query = self.__session.query(User)
+            for key, value in kwargs.items():
+                query = query.filter(getattr(User, key) == value)
 
+            user = query.first()
+
+            if user is None:
+                raise NoResultFound("No user found")
+
+            return user
         except InvalidRequestError as e:
             self.__session.rollback()
             raise e
+        finally:
+            self.__session.close()
