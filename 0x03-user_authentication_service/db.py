@@ -41,8 +41,10 @@ class DB:
         email - the email address of the user
         hashed_password- password of the user that has been
         hashed using bcrypt"""
+        if not email or not hashed_password:
+            return
         user = User(email=email, hashed_password=hashed_password)
-        session = self._session
+        self._session
         self.__session.add(user)
         self.__session.commit()
         return user
@@ -53,20 +55,12 @@ class DB:
         :param kwargs: attributes of the user
         :return: user
         """
+        if not kwargs:
+            raise InvalidRequestError
         try:
-            query = self.__session.query(User)
-            for key, value in kwargs.items():
-                query = query.filter(getattr(User, key) == value)
-
-            user = query.first()
-
-            if user is None:
-                raise NoResultFound("No user found")
-
-            return user
-        except (InvalidRequestError, AttributeError) as e:
-            self.__session.rollback()
-            raise InvalidRequestError("Invalid query")
+            return self._session.query(User).filter_by(**kwargs).one()
+        except Exception:
+            raise NoResultFound
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
