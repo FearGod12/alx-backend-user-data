@@ -49,7 +49,7 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs) -> User:
         """
         retrieves a user based on the provided attributes
         :param kwargs: attributes of the user

@@ -96,3 +96,18 @@ class Auth:
         """
         if user_id is not None:
             self._db.update_user(user_id, session_id=None)
+
+    def get_reset_password_token(self, email: str) -> str:
+        """
+        generates a resete token
+        :param email: users email
+        :return: the generated token
+        """
+
+        try:
+            user = self._db.find_user_by(email=email)
+            token = _generate_uuid()
+            self._db.update_user(user.id, reset_token=token)
+            return token
+        except NoResultFound:
+            raise ValueError
